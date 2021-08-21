@@ -1,2 +1,2 @@
-# tagd-android
+# Technology agnostic clean architecture - android
 tagd Android Application
