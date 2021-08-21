@@ -1,0 +1,8 @@
+rootProject.name = "CleanArchitecture"
+include ':app'
+include ':architecture:tagd-droid'
+include ':extensions:androidx'
+include ':extensions:langx'
+include ':architecture:tagd-core'
+include ':architecture:tagd-di'
+include ':architecture:tagd-arch'

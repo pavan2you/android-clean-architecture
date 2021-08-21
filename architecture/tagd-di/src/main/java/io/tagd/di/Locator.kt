@@ -1,0 +1,76 @@
+package io.tagd.di
+
+import io.tagd.core.Releasable
+import io.tagd.core.Service
+import io.tagd.core.State
+
+interface Locator : Releasable {
+
+    fun layers(): Map<Class<*>, Layer<*>?>?
+
+    fun <T : Service> bind(layer: Layer<T>, clazz: Class<T>)
+
+    fun <T : Service> locate(clazz: Class<T>): Layer<T>?
+}
+
+class LayerLocator : Locator {
+
+    private var layers: MutableMap<Class<*>, Layer<*>?>? = mutableMapOf()
+
+    override fun layers(): Map<Class<*>, Layer<*>?>? = layers
+
+    override fun <T : Service> bind(layer: Layer<T>, clazz: Class<T>) {
+        layers?.put(clazz, layer)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Service> locate(clazz: Class<T>): Layer<T>? {
+        val layer = layers?.get(clazz) ?: layers?.values?.firstOrNull {
+            it?.contains(Key<T>(clazz)) ?: false
+        }
+        return layer as? Layer<T>?
+    }
+
+    override fun release() {
+        layers?.values?.forEach {
+            it?.release()
+        }
+        layers?.clear()
+        layers = null
+    }
+}
+
+inline fun <reified T : Service> Locator.layer(bindings: Layer<T>.() -> Unit): Layer<T> {
+    return (locate(T::class.java) ?: Layer()).apply {
+        bind(this, T::class.java)
+        bindings()
+    }
+}
+
+fun <T : Service, S : T> Locator.get(clazz: Key<S>): S? {
+    return layers()
+        ?.values
+        ?.firstOrNull { it?.contains(clazz) ?: false }
+        ?.let {
+            it.get(clazz) as S?
+        }
+}
+
+fun <T : Service, S : T> Locator.create(key: Key<S>, args: State? = null): S {
+    var exception: Exception? = null
+    var s: S? = null
+
+    layers()
+        ?.values
+        ?.firstOrNull { it?.contains(key) ?: false }
+        ?.let {
+            @Suppress("UNCHECKED_CAST")
+            try {
+                s = (it as Layer<T>).create(key, args)
+            } catch (e: Exception) {
+                exception = e
+            }
+        }
+
+    return s ?: throw exception!!
+}

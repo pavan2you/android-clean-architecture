@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    api project(':architecture:tagd-core')
+    api project(':extensions:langx')
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:3.8.0'
+    testImplementation 'org.mockito:mockito-inline:2.28.2'
+    testImplementation 'com.nhaarman:mockito-kotlin:1.6.0'
+}
