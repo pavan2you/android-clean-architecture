@@ -1,6 +1,6 @@
 package io.tagd.arch.domain.usecase
 
-import io.javax.util.collection.getKeys
+import io.tagd.javax.util.collection.getKeys
 import io.tagd.core.annotation.VisibleForTesting
 import java.util.concurrent.ConcurrentHashMap
 

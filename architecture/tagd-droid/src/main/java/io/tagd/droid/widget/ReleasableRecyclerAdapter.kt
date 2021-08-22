@@ -10,7 +10,7 @@ abstract class ReleasableRecyclerAdapter<T : DataObject, VH : BindableRecyclerVi
     val items: MutableList<T> = mutableListOf()
     private var recyclerView: RecyclerView? = null
 
-    fun setDataModel(list: List<T>) {
+    open fun setDataModel(list: List<T>) {
         this.items.clear()
         this.items.addAll(list)
         notifyDataSetChanged()
