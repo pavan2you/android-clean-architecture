@@ -12,6 +12,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     api project(':architecture:tagd-core')
+    api project(':architecture:tagd-di')
     api project(':extensions:langx')
 
     testImplementation 'junit:junit:4.13.2'

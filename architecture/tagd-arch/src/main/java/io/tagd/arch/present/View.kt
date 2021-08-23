@@ -1,4 +1,4 @@
-package io.tagd.arch.presentation
+package io.tagd.arch.present
 
 import io.tagd.core.Releasable
 

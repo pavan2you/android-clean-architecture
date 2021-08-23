@@ -1,13 +1,13 @@
 package io.tagd.di
 
 import io.tagd.core.Service
-import io.tagd.di.Scope.Companion.DEFAULT_SCOPE
+import io.tagd.di.Scope.Companion.GLOBAL_SCOPE
 import java.lang.ref.WeakReference
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 inline fun <reified T : Service> inject(
-    scope: String = DEFAULT_SCOPE,
+    scope: String = GLOBAL_SCOPE,
     key: Key<T> = Key(typeOf<T>())
 ): InjectDelegateProvider<T> {
 
@@ -16,7 +16,7 @@ inline fun <reified T : Service> inject(
 }
 
 inline fun <reified T : Service> injectX(
-    scope: String = DEFAULT_SCOPE,
+    scope: String = GLOBAL_SCOPE,
     key: Key<T> = Key(typeOf<T>())
 ): NullableInjectDelegateProvider<T> {
 
@@ -25,9 +25,9 @@ inline fun <reified T : Service> injectX(
 }
 
 fun resolveScope(scope: String): Scope {
-    return if (scope != DEFAULT_SCOPE) {
-        Default.subScope(scope) ?: Default
-    } else Default
+    return if (scope != GLOBAL_SCOPE) {
+        Global.subScope(scope) ?: Global
+    } else Global
 }
 
 class InjectDelegateProvider<T : Service>(private val scope: Scope, private val key: Key<T>) {

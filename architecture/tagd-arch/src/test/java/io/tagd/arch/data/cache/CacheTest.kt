@@ -7,9 +7,9 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class DataCacheTest {
+class CacheTest {
 
-    private val dao: DataCache = spy()
+    private val dao: Cache<Any> = spy()
 
     @Test
     fun `given a DataCache then verify it is not null`() {

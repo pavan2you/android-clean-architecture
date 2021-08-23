@@ -8,9 +8,9 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class AbstractDataCacheTest {
+class AbstractCacheTest {
 
-    private val cache: AbstractDataCache = spy()
+    private val cache: AbstractCache<Any> = spy()
 
     @Test
     fun `given a DataCache then verify it is not null`() {

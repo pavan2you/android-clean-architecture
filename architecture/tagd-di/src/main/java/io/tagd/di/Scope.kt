@@ -3,9 +3,9 @@ package io.tagd.di
 import io.tagd.core.Releasable
 import io.tagd.core.Service
 import io.tagd.core.State
-import io.tagd.di.Scope.Companion.DEFAULT_SCOPE
+import io.tagd.di.Scope.Companion.GLOBAL_SCOPE
 
-open class Scope(val name: String = DEFAULT_SCOPE) : Releasable {
+open class Scope(val name: String = GLOBAL_SCOPE) : Releasable {
 
     private var mutableLocator: Locator? = LayerLocator()
     private var scopes: MutableMap<String, Scope>? = mutableMapOf()
@@ -30,8 +30,8 @@ open class Scope(val name: String = DEFAULT_SCOPE) : Releasable {
     }
 
     fun addSubScope(scope: Scope): Scope {
-        if (scope.name == DEFAULT_SCOPE) {
-            throw IllegalAccessException("default scope can not be a sub scope")
+        if (scope.name == GLOBAL_SCOPE) {
+            throw IllegalAccessException("global scope can not be a sub scope")
         }
         scopes?.put(scope.name, scope)
         return this
@@ -99,20 +99,20 @@ open class Scope(val name: String = DEFAULT_SCOPE) : Releasable {
     }
 
     companion object {
-        const val DEFAULT_SCOPE = "default"
+        const val GLOBAL_SCOPE = "global"
     }
 }
 
-fun scope(name: String, parent: Scope? = Default, bindings: Scope.() -> Unit): Scope {
-    val scope = if (name == DEFAULT_SCOPE) {
-        if (parent == null || parent  == Default) {
-            Default
+fun scope(name: String, parent: Scope? = Global, bindings: Scope.() -> Unit): Scope {
+    val scope = if (name == GLOBAL_SCOPE) {
+        if (parent == null || parent  == Global) {
+            Global
         } else {
-            throw IllegalAccessException("default scope can not be a sub scope")
+            throw IllegalAccessException("global scope can not be a sub scope")
         }
     } else {
         val scope = Scope(name)
-        (parent ?: Default).addSubScope(scope)
+        (parent ?: Global).addSubScope(scope)
         scope
     }
     return scope.apply {
@@ -165,4 +165,4 @@ fun <T : Service, S : T> Scope.create(key: Key<S>, args: State? = null): S {
     return value ?: throw exception!!
 }
 
-object Default : Scope()
+object Global : Scope()

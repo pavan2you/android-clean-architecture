@@ -2,8 +2,8 @@ package io.tagd.droid.mvp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import io.tagd.arch.presentation.mvp.PresentableView
-import io.tagd.arch.presentation.mvp.Presenter
+import io.tagd.arch.present.mvp.PresentableView
+import io.tagd.arch.present.mvp.Presenter
 
 abstract class MvpActivity<V : PresentableView, P : Presenter<V>> : AppCompatActivity(),
     PresentableView {

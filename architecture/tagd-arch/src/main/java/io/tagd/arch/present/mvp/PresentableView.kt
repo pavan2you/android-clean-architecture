@@ -1,6 +1,6 @@
-package io.tagd.arch.presentation.mvp
+package io.tagd.arch.present.mvp
 
-import io.tagd.arch.presentation.View
+import io.tagd.arch.present.View
 
 interface PresentableView : View {
 

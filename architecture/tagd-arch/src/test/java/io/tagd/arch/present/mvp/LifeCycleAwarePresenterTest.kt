@@ -1,4 +1,4 @@
-package io.tagd.arch.presentation.mvp
+package io.tagd.arch.present.mvp
 
 import com.nhaarman.mockito_kotlin.mock
 import org.junit.Test

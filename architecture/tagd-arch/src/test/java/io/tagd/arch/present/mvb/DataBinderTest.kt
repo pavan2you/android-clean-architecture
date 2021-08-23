@@ -1,4 +1,4 @@
-package io.tagd.arch.presentation.mvb
+package io.tagd.arch.present.mvb
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.spy

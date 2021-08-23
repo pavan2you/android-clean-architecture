@@ -134,7 +134,7 @@ class DelegateTest {
     }
 
     private fun stubFakeServiceInDefaultScope() {
-        Default.locator.layer<FakeService> {
+        Global.locator.layer<FakeService> {
             bind(key(), FakeService())
         }
     }

@@ -16,7 +16,7 @@ class ScopeTest {
     private val scope = Scope()
 
     @Test
-    fun `verify default state is empty`() {
+    fun `verify global state is empty`() {
         assert(scope.state.isEmpty())
     }
 
@@ -179,19 +179,19 @@ class ScopeTest {
     }
 
     @Test
-    fun `given a scope name is default then verify scope-inline returns default scope`() {
+    fun `given a scope name is global then verify scope-inline returns global scope`() {
         var created = false
-        val scope = scope("default") {
+        val scope = scope("global") {
             created = true
         }
         assertNotNull(scope)
-        assert(scope.name == Scope.DEFAULT_SCOPE)
+        assert(scope.name == Scope.GLOBAL_SCOPE)
         assert(created)
     }
 
     @Test(expected = IllegalAccessException::class)
-    fun `given default scope added as sub scope then verify scope-inline throws IllegalAccessException`() {
-        scope("default", scope) {
+    fun `given global scope added as sub scope then verify scope-inline throws IllegalAccessException`() {
+        scope("global", scope) {
         }
     }
 

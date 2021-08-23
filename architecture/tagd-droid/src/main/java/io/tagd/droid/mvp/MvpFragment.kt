@@ -2,8 +2,8 @@ package io.tagd.droid.mvp
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import io.tagd.arch.presentation.mvp.PresentableView
-import io.tagd.arch.presentation.mvp.Presenter
+import io.tagd.arch.present.mvp.PresentableView
+import io.tagd.arch.present.mvp.Presenter
 
 abstract class MvpFragment<V : PresentableView, P : Presenter<V>> : Fragment(), PresentableView {
 

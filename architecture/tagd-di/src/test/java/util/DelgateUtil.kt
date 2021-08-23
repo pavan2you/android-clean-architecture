@@ -6,7 +6,7 @@ import io.tagd.di.*
 import kotlin.reflect.KProperty
 
 inline fun <reified T : Service> Any.getInject(
-    scope: String = Scope.DEFAULT_SCOPE,
+    scope: String = Scope.GLOBAL_SCOPE,
     key: Key<T> = Key(typeOf<T>())
 ): T {
 
@@ -17,7 +17,7 @@ inline fun <reified T : Service> Any.getInject(
 }
 
 inline fun <reified T : Service> Any.getInjectX(
-    scope: String = Scope.DEFAULT_SCOPE,
+    scope: String = Scope.GLOBAL_SCOPE,
     key: Key<T> = Key(typeOf<T>())
 ): T? {
 

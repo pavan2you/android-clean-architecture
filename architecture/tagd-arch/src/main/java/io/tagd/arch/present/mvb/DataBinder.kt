@@ -1,4 +1,4 @@
-package io.tagd.arch.presentation.mvb
+package io.tagd.arch.present.mvb
 
 import io.tagd.arch.data.DataObject
 import java.lang.ref.WeakReference
