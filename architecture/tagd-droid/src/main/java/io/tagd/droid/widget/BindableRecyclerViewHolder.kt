@@ -52,7 +52,7 @@ abstract class BindableRecyclerViewHolder<T : DataObject, V : BindableView<T>, B
         onCreate()
     }
 
-    protected fun onCreate() {
+    protected open fun onCreate() {
         binder = onCreateBinder()
         binder?.onCreate()
         onCreateView()
@@ -78,12 +78,12 @@ abstract class BindableRecyclerViewHolder<T : DataObject, V : BindableView<T>, B
         bind(subject, *optionals)
     }
 
-    fun bind(model: T, vararg optionals: Any?) {
+    open fun bind(model: T, vararg optionals: Any?) {
         this.optionals = optionals
         binder?.onBind(model, *optionals)
     }
 
-    fun unbind() {
+    open fun unbind() {
         if (!unbound) {
             unbound = true
             binder?.onUnbind()

@@ -1,6 +1,6 @@
 package io.tagd.arch.domain.usecase
 
-import io.javax.util.collection.removeAllByFilter
+import io.tagd.javax.util.collection.removeAllByFilter
 import io.tagd.core.annotation.VisibleForTesting
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicBoolean
@@ -45,8 +45,8 @@ abstract class CallableUseCase<T> : UseCase<Unit, T>() {
         )
     }
 
-    override fun flush(arguments: Args) {
-        removeObserver(arguments)
+    override fun flush(args: Args) {
+        removeObserver(args)
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
