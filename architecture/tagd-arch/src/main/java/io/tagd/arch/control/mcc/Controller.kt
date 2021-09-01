@@ -10,6 +10,10 @@ interface Controller<C : Controllable> : Releasable {
 
     fun onStart()
 
+    fun onAwaiting()
+
+    fun onReady()
+
     fun onStop()
 
     fun onDestroy()

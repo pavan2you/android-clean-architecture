@@ -4,12 +4,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import io.tagd.arch.control.IApplication
 import io.tagd.arch.data.DataObject
 import io.tagd.arch.present.mvb.BindableView
 import io.tagd.arch.present.mvb.Binder
 
 abstract class BindableRecyclerViewHolder<T : DataObject, V : BindableView<T>, B : Binder<T, V>> :
     RecyclerView.ViewHolder, BindableView<T> {
+
+    override val app: IApplication?
+        get() = itemView.context?.applicationContext as? IApplication
 
     protected var binder: B? = null
 
@@ -88,6 +92,18 @@ abstract class BindableRecyclerViewHolder<T : DataObject, V : BindableView<T>, B
             unbound = true
             binder?.onUnbind()
         }
+    }
+
+    open fun attached() {
+        //no op
+    }
+
+    open fun detached() {
+        //no op
+    }
+
+    open fun recycled() {
+        //no op
     }
 
     fun onDestroy() {
