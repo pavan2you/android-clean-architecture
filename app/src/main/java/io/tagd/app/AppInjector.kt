@@ -6,7 +6,7 @@ import io.tagd.arch.data.gateway.Gateway
 import io.tagd.arch.data.repo.Repository
 import io.tagd.di.*
 
-class Injector {
+class AppInjector {
 
     fun setup(context: Context) {
         scope("application") {

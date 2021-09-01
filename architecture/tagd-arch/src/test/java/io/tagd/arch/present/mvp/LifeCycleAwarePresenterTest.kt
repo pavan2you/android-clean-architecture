@@ -25,7 +25,7 @@ class LifeCycleAwarePresenterTest {
     }
 
     @Test
-    fun `verify OnCreate is called`() {
+    fun `verify onCreate is called`() {
         var called = false
         `when`(presenter.onCreate()).thenAnswer {
             it.callRealMethod()
@@ -39,7 +39,7 @@ class LifeCycleAwarePresenterTest {
     }
 
     @Test
-    fun `verify OnStart is called`() {
+    fun `verify onStart is called`() {
         var called = false
         `when`(presenter.onStart()).thenAnswer {
             it.callRealMethod()
@@ -53,7 +53,7 @@ class LifeCycleAwarePresenterTest {
     }
 
     @Test
-    fun `verify OnResume is called`() {
+    fun `verify onResume is called`() {
         var called = false
         `when`(presenter.onResume()).thenAnswer {
             it.callRealMethod()
@@ -67,7 +67,35 @@ class LifeCycleAwarePresenterTest {
     }
 
     @Test
-    fun `verify OnPause is called`() {
+    fun `verify onAwaiting is called`() {
+        var called = false
+        `when`(presenter.onAwaiting()).thenAnswer {
+            it.callRealMethod()
+            called = true
+            return@thenAnswer Unit
+        }
+
+        presenter.onAwaiting()
+
+        assert(called)
+    }
+
+    @Test
+    fun `verify onReady is called`() {
+        var called = false
+        `when`(presenter.onReady()).thenAnswer {
+            it.callRealMethod()
+            called = true
+            return@thenAnswer Unit
+        }
+
+        presenter.onReady()
+
+        assert(called)
+    }
+
+    @Test
+    fun `verify onPause is called`() {
         var called = false
         `when`(presenter.onPause()).thenAnswer {
             it.callRealMethod()
@@ -81,7 +109,7 @@ class LifeCycleAwarePresenterTest {
     }
 
     @Test
-    fun `verify OnStop is called`() {
+    fun `verify onStop is called`() {
         var called = false
         `when`(presenter.onStop()).thenAnswer {
             it.callRealMethod()
@@ -95,7 +123,7 @@ class LifeCycleAwarePresenterTest {
     }
 
     @Test
-    fun `verify OnDestroy is called`() {
+    fun `verify onDestroy is called`() {
         var called = false
         `when`(presenter.onDestroy()).thenAnswer {
             it.callRealMethod()

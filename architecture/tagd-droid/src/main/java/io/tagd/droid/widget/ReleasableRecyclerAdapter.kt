@@ -31,6 +31,21 @@ abstract class ReleasableRecyclerAdapter<T : DataObject, VH : BindableRecyclerVi
         super.onDetachedFromRecyclerView(recyclerView)
     }
 
+    override fun onViewAttachedToWindow(holder: VH) {
+        super.onViewAttachedToWindow(holder)
+        holder.attached()
+    }
+
+    override fun onViewDetachedFromWindow(holder: VH) {
+        holder.detached()
+        super.onViewDetachedFromWindow(holder)
+    }
+
+    override fun onViewRecycled(holder: VH) {
+        holder.recycled()
+        super.onViewRecycled(holder)
+    }
+
     override fun release() {
         releaseViewHolders(recyclerView)
         items.clear()
