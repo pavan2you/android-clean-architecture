@@ -1,4 +1,4 @@
-package io.tagd.arch.control.mcc
+package io.tagd.arch.control
 
 import com.nhaarman.mockito_kotlin.mock
 import org.junit.Test
@@ -7,21 +7,21 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class LifeCycleAwareControllerTest {
+class LifeCycleAwareApplicationControllerTest {
 
-    private val controllable: Controllable = mock()
-    private val controller = Mockito.spy(LifeCycleAwareController(controllable))
+    private val app: IApplication = mock()
+    private val controller = Mockito.spy(LifeCycleAwareApplicationController(app))
 
     @Test
-    fun `verify controllable is not null when controller initialized`() {
-        assert(controller.controllable != null)
+    fun `verify app is not null when controller initialized`() {
+        assert(controller.app != null)
     }
 
     @Test
-    fun `verify when release is called controllable is cleared`() {
+    fun `verify when release is called app is cleared`() {
         controller.release()
 
-        assert(controller.controllable == null)
+        assert(controller.app == null)
     }
 
     @Test
@@ -39,29 +39,15 @@ class LifeCycleAwareControllerTest {
     }
 
     @Test
-    fun `verify onStart is called`() {
+    fun `verify onLaunch is called`() {
         var called = false
-        Mockito.`when`(controller.onStart()).thenAnswer {
+        Mockito.`when`(controller.onLaunch()).thenAnswer {
             it.callRealMethod()
             called = true
             return@thenAnswer Unit
         }
 
-        controller.onStart()
-
-        assert(called)
-    }
-
-    @Test
-    fun `verify onAwaiting is called`() {
-        var called = false
-        Mockito.`when`(controller.onAwaiting()).thenAnswer {
-            it.callRealMethod()
-            called = true
-            return@thenAnswer Unit
-        }
-
-        controller.onAwaiting()
+        controller.onLaunch()
 
         assert(called)
     }
@@ -81,15 +67,29 @@ class LifeCycleAwareControllerTest {
     }
 
     @Test
-    fun `verify onStop is called`() {
+    fun `verify onForeground is called`() {
         var called = false
-        Mockito.`when`(controller.onStop()).thenAnswer {
+        Mockito.`when`(controller.onForeground()).thenAnswer {
             it.callRealMethod()
             called = true
             return@thenAnswer Unit
         }
 
-        controller.onStop()
+        controller.onForeground()
+
+        assert(called)
+    }
+
+    @Test
+    fun `verify onBackground is called`() {
+        var called = false
+        Mockito.`when`(controller.onBackground()).thenAnswer {
+            it.callRealMethod()
+            called = true
+            return@thenAnswer Unit
+        }
+
+        controller.onBackground()
 
         assert(called)
     }

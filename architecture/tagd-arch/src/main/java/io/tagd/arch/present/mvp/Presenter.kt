@@ -12,6 +12,10 @@ interface Presenter<V : PresentableView> : Releasable {
 
     fun onResume()
 
+    fun onAwaiting()
+
+    fun onReady()
+
     fun onPause()
 
     fun onStop()

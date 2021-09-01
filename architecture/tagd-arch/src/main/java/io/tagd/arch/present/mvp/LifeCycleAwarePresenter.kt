@@ -14,18 +14,31 @@ open class LifeCycleAwarePresenter<V : PresentableView>(view: V) : Presenter<V> 
         get() = viewReference?.get()
 
     override fun onCreate() {
+        //no op
     }
 
     override fun onStart() {
+        //no op
     }
 
     override fun onResume() {
+        //no op
+    }
+
+    override fun onAwaiting() {
+        //no op
+    }
+
+    override fun onReady() {
+        //no op
     }
 
     override fun onPause() {
+        //no op
     }
 
     override fun onStop() {
+        //no op
     }
 
     override fun onDestroy() {
@@ -33,6 +46,7 @@ open class LifeCycleAwarePresenter<V : PresentableView>(view: V) : Presenter<V> 
     }
 
     override fun onBackPressed() {
+        //no op
     }
 
     override fun canHandleBackPress(): Boolean {

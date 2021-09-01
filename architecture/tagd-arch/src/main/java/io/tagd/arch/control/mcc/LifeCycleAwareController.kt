@@ -10,12 +10,23 @@ open class LifeCycleAwareController<C : Controllable>(controllable: C) : Control
         get() = controllableReference?.get()
 
     override fun onCreate() {
+        //no op
     }
 
     override fun onStart() {
+        //no op
+    }
+
+    override fun onAwaiting() {
+        //no op
+    }
+
+    override fun onReady() {
+        //no op
     }
 
     override fun onStop() {
+        //no op
     }
 
     override fun onDestroy() {
