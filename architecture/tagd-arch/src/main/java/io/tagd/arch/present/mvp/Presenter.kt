@@ -17,9 +17,10 @@
 
 package io.tagd.arch.present.mvp
 
+import io.tagd.core.LayerSuperType
 import io.tagd.core.Releasable
 
-interface Presenter<V : PresentableView> : Releasable {
+interface Presenter<V : PresentableView> : LayerSuperType, Releasable {
 
     val view: V?
 

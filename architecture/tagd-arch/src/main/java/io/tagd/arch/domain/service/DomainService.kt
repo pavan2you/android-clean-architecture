@@ -17,6 +17,37 @@
 
 package io.tagd.arch.domain.service
 
+import io.tagd.core.LayerSuperType
 import io.tagd.core.Service
+import io.tagd.core.State
+import io.tagd.di.Global
+import io.tagd.di.Keyable
+import io.tagd.di.Scopable
+import io.tagd.di.key
 
-interface DomainService : Service
+interface DomainService : LayerSuperType, Service {
+
+    /**
+     * The [DomainService.Factory] enables the DI frameworks and / or application logic to easily
+     * create / get any [DomainService]
+     */
+    companion object Factory {
+
+        inline fun <reified S : DomainService> domainService(
+            scope: Scopable = Global,
+            key: Keyable<S>? = null
+        ): S? {
+
+            return scope.get<DomainService, S>(key ?: key())
+        }
+
+        inline fun <reified S : DomainService> createDomainService(
+            scope: Scopable = Global,
+            key: Keyable<S>? = null,
+            state: State? = null
+        ): S {
+
+            return scope.create(key ?: key(), state)
+        }
+    }
+}

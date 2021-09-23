@@ -17,11 +17,11 @@
 
 package io.tagd.arch.domain.crosscutting.async
 
-import io.tagd.arch.access.crosscutting
-import io.tagd.arch.domain.crosscutting.CrossCutting
+import io.tagd.arch.domain.crosscutting.Crosscutting
+import io.tagd.arch.domain.crosscutting.Crosscutting.Factory.crosscutting
 import io.tagd.core.Cancellable
 
-interface AsyncStrategy : CrossCutting, Cancellable {
+interface AsyncStrategy : Crosscutting, Cancellable {
 
     fun execute(context: Any? = null, work: () -> Unit)
 }

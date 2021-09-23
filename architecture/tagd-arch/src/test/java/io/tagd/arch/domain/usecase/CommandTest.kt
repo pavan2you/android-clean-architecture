@@ -17,8 +17,12 @@
 
 package io.tagd.arch.domain.usecase
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.spy
+import io.tagd.arch.present.service.PresentationService
+import io.tagd.di.Global
+import io.tagd.di.layer
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -67,5 +71,51 @@ class CommandTest {
         callback.invoke(null)
 
         assert(called)
+    }
+
+    @Test
+    fun `verify usecase access for bounded service`() {
+        with(Global) {
+            layer<Command<*, *>> {
+                bind<Command<*, *>>().toInstance(mock())
+            }
+        }
+
+        val service = Command.usecase<Command<*, *>>()
+        assert(service != null)
+    }
+
+    @Test
+    fun `verify createUsecase access for bounded service`() {
+        val service1 = FakeUsecase()
+        with(Global) {
+            layer<Command<*, *>> {
+                bind<FakeUsecase>().toCreator { service1 }
+            }
+        }
+
+        val service2 = Command.createUsecase<FakeUsecase>()
+        assert(service1 === service2)
+    }
+
+    class FakeUsecase : Command<Any, Any> {
+        override fun release() {
+        }
+
+        override fun cancel(context: Any?): Boolean {
+            return true
+        }
+
+        override fun execute(
+            args: Args?,
+            success: Callback<Any>?,
+            failure: Callback<Throwable>?
+        ): Any {
+            return "fake"
+        }
+
+        override fun lastResult(args: Args?): Any? {
+            return "fake"
+        }
     }
 }

@@ -19,7 +19,12 @@ package io.tagd.di
 
 import io.tagd.core.Service
 
-class Key<T : Service>(val key: Any) {
+interface Keyable<T> {
+
+    val key: Any
+}
+
+class Key<T : Service>(override val key: Any) : Keyable<T> {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -63,18 +68,18 @@ class TypedClass<T : Service>(
 
 inline fun <reified T : Any> typeOf(): Class<T> = T::class.java
 
-inline fun <reified T : Service> key(): Key<T> = Key(typeOf<T>())
+inline fun <reified T : Service> key(): Keyable<T> = Key(typeOf<T>())
 
 inline fun <reified T : Service> key(key: String): Key<T> = Key(key)
 
-inline fun <reified T : Service> key(vararg typeClasses: Class<*>): Key<T> =
+inline fun <reified T : Service> key(vararg typeClasses: Class<*>): Keyable<T> =
     Key(TypedClass(T::class.java, typeClasses))
 
-inline fun <reified T : Service, reified S : Any> key2(): Key<T> =
+inline fun <reified T : Service, reified S : Any> key2(): Keyable<T> =
     Key(typedClassOf<T, S>())
 
 inline fun <reified T : Service, reified S : Any> typedClassOf(): TypedClass<T> =
     TypedClass(T::class.java, arrayOf(typeOf<S>()))
 
-inline fun <reified T : Service, reified R : Any, reified S : Any> key3(): Key<T> =
+inline fun <reified T : Service, reified R : Any, reified S : Any> key3(): Keyable<T> =
     Key(TypedClass(T::class.java, arrayOf(typeOf<R>(), typeOf<S>())))

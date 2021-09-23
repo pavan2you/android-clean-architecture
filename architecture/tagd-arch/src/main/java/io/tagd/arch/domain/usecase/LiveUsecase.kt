@@ -21,7 +21,7 @@ import io.tagd.javax.util.collection.getKeys
 import io.tagd.core.annotation.VisibleForTesting
 import java.util.concurrent.ConcurrentHashMap
 
-abstract class LiveUseCase<T> : UseCase<Unit, T>() {
+abstract class LiveUsecase<T> : Usecase<Unit, T>() {
 
     private val liveObservers = ConcurrentHashMap<Args, LiveData<T>>()
 

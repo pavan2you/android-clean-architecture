@@ -46,6 +46,7 @@ abstract class MccService<C : Controllable, L : Controller<C>> : Service(), Cont
         return (application as TagdApplication).appService()!!
     }
 
+    @Suppress(names = ["UNCHECKED_CAST"])
     override fun <C : Controllable> controller(): Controller<C>? = controller as? Controller<C>
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

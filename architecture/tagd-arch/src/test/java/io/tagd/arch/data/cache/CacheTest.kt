@@ -17,7 +17,10 @@
 
 package io.tagd.arch.data.cache
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.spy
+import io.tagd.di.Global
+import io.tagd.di.layer
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,5 +34,35 @@ class CacheTest {
     @Test
     fun `given a DataCache then verify it is not null`() {
         Assert.assertNotNull(dao)
+    }
+
+    @Test
+    fun `verify cache access for bounded service`() {
+        with(Global) {
+            layer<Cache<*>> {
+                bind<Cache<*>>().toInstance(mock())
+            }
+        }
+
+        val service = Cache.cache<Cache<*>>()
+        assert(service != null)
+    }
+
+    @Test
+    fun `verify createCache access for bounded service`() {
+        val service1 = FakeCache()
+        with(Global) {
+            layer<Cache<*>> {
+                bind<FakeCache>().toCreator { service1 }
+            }
+        }
+
+        val service2 = Cache.createCache<FakeCache>()
+        assert(service1 === service2)
+    }
+
+    class FakeCache : Cache<Any> {
+        override fun release() {
+        }
     }
 }

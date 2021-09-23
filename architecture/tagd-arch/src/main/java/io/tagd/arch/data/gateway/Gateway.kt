@@ -17,9 +17,40 @@
 
 package io.tagd.arch.data.gateway
 
+import io.tagd.core.LayerSuperType
 import io.tagd.core.Service
+import io.tagd.core.State
+import io.tagd.di.Global
+import io.tagd.di.Keyable
+import io.tagd.di.Scopable
+import io.tagd.di.key
 
-interface Gateway : Service
+interface Gateway : LayerSuperType, Service {
+
+    /**
+     * The [Gateway.Factory] enables the DI frameworks and / or application logic to easily
+     * create / get any [Gateway]
+     */
+    companion object Factory {
+
+        inline fun <reified S : Gateway> gateway(
+            scope: Scopable = Global,
+            key: Keyable<S>? = null
+        ): S? {
+
+            return scope.get<Gateway, S>(key ?: key())
+        }
+
+        inline fun <reified S : Gateway> createGateway(
+            scope: Scopable = Global,
+            key: Keyable<S>? = null,
+            state: State? = null
+        ): S {
+
+            return scope.create(key ?: key(), state)
+        }
+    }
+}
 
 abstract class AbstractGateway : Gateway {
 

@@ -135,6 +135,7 @@ open class TagdApplication : Application(), IApplication {
         return Global.get<AppService, S>(key ?: io.tagd.di.key())
     }
 
+    @Suppress(names = ["UNCHECKED_CAST"])
     override fun <A : IApplication> controller(): ApplicationController<A>? =
         controller as? ApplicationController<A>
 

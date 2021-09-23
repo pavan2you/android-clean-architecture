@@ -64,7 +64,8 @@ inline fun <reified T : Service> Locator.layer(bindings: Layer<T>.() -> Unit): L
     }
 }
 
-fun <T : Service, S : T> Locator.get(clazz: Key<S>): S? {
+@Suppress(names = ["IMPLICIT_NOTHING_TYPE_ARGUMENT_IN_RETURN_POSITION"])
+fun <T : Service, S : T> Locator.get(clazz: Keyable<S>): S? {
     return layers()
         ?.values
         ?.firstOrNull { it?.contains(clazz) ?: false }
@@ -73,7 +74,7 @@ fun <T : Service, S : T> Locator.get(clazz: Key<S>): S? {
         }
 }
 
-fun <T : Service, S : T> Locator.create(key: Key<S>, args: State? = null): S {
+fun <T : Service, S : T> Locator.create(key: Keyable<S>, args: State? = null): S {
     var exception: Exception? = null
     var s: S? = null
 

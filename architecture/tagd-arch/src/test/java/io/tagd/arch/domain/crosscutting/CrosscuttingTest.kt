@@ -15,53 +15,57 @@
  *
  */
 
-package io.tagd.arch.data.dao
+package io.tagd.arch.domain.crosscutting
 
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.spy
+import io.tagd.arch.fake.FakeInjector
 import io.tagd.di.Global
 import io.tagd.di.layer
-import org.junit.Assert
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class DataAccessObjectTest {
+class CrosscuttingTest {
 
-    private val dao: DataAccessObject = spy()
+    @Before
+    fun setup() {
+        FakeInjector.inject()
+    }
 
-    @Test
-    fun `given a Dao then verify it is not null`() {
-        Assert.assertNotNull(dao)
+    @After
+    fun tearDown() {
+        FakeInjector.release()
     }
 
     @Test
-    fun `verify dao access for bounded service`() {
+    fun `verify crosscutting access for bounded service`() {
         with(Global) {
-            layer<DataAccessObject> {
-                bind<DataAccessObject>().toInstance(mock())
+            layer<Crosscutting> {
+                bind<Crosscutting>().toInstance(mock())
             }
         }
 
-        val service = DataAccessObject.dao<DataAccessObject>()
+        val service = Crosscutting.crosscutting<Crosscutting>()
         assert(service != null)
     }
 
     @Test
-    fun `verify createDataAccessObject access for bounded service`() {
-        val service1 = FakeDataAccessObject()
+    fun `verify createCrosscutting access for bounded service`() {
+        val service1 = FakeCrosscutting()
         with(Global) {
-            layer<DataAccessObject> {
-                bind<FakeDataAccessObject>().toCreator { service1 }
+            layer<Crosscutting> {
+                bind<FakeCrosscutting>().toCreator { service1 }
             }
         }
 
-        val service2 = DataAccessObject.createDao<FakeDataAccessObject>()
+        val service2 = Crosscutting.createCrosscutting<FakeCrosscutting>()
         assert(service1 === service2)
     }
 
-    class FakeDataAccessObject : DataAccessObject {
+    class FakeCrosscutting : Crosscutting {
         override fun release() {
         }
     }

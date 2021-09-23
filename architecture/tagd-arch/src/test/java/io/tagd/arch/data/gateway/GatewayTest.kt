@@ -17,7 +17,10 @@
 
 package io.tagd.arch.data.gateway
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.spy
+import io.tagd.di.Global
+import io.tagd.di.layer
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,5 +34,35 @@ class GatewayTest {
     @Test
     fun `given a Gateway then verify it is not null`() {
         Assert.assertNotNull(gateway)
+    }
+
+    @Test
+    fun `verify gateway access for bounded service`() {
+        with(Global) {
+            layer<Gateway> {
+                bind<Gateway>().toInstance(mock())
+            }
+        }
+
+        val service = Gateway.gateway<Gateway>()
+        assert(service != null)
+    }
+
+    @Test
+    fun `verify createGateway access for bounded service`() {
+        val service1 = FakeGateway()
+        with(Global) {
+            layer<Gateway> {
+                bind<FakeGateway>().toCreator { service1 }
+            }
+        }
+
+        val service2 = Gateway.createGateway<FakeGateway>()
+        assert(service1 === service2)
+    }
+
+    class FakeGateway : Gateway {
+        override fun release() {
+        }
     }
 }

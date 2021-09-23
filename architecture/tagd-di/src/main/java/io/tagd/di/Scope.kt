@@ -23,7 +23,14 @@ import io.tagd.core.Service
 import io.tagd.core.State
 import io.tagd.di.Scope.Companion.GLOBAL_SCOPE
 
-open class Scope(override val name: String = GLOBAL_SCOPE) : Nameable, Releasable {
+interface Scopable : Nameable, Releasable {
+
+    fun <T : Service, S : T> get(clazz: Keyable<S>): S?
+
+    fun <T : Service, S : T> create(key: Keyable<S>, args: State? = null): S
+}
+
+open class Scope(override val name: String = GLOBAL_SCOPE) : Scopable {
 
     private var mutableLocator: Locator? = LayerLocator()
     private var scopes: MutableMap<String, Scope>? = mutableMapOf()
@@ -92,6 +99,47 @@ open class Scope(override val name: String = GLOBAL_SCOPE) : Nameable, Releasabl
         return value
     }
 
+    override fun <T : Service, S : T> get(clazz: Keyable<S>): S? {
+        var value: S? = locator.get(clazz)
+        if (value == null) {
+            val scopes = subScopes()
+            if (scopes != null) {
+                for (scope in scopes) {
+                    value = scope.get(clazz)
+                    if (value != null) {
+                        break
+                    }
+                }
+            }
+        }
+        return value
+    }
+
+    override fun <T : Service, S : T> create(key: Keyable<S>, args: State?): S {
+        var value: S? = null
+        var exception: Exception? = null
+
+        try {
+            value = locator.create(key, args)
+        } catch (e: Exception) {
+            exception = e
+
+            val scopes = subScopes()
+            if (scopes != null) {
+                for (scope in scopes) {
+                    try {
+                        value = scope.create(key, args)
+                        break
+                    } catch (e: Exception) {
+                        //ignore
+                    }
+                }
+            }
+        }
+
+        return value ?: throw exception!!
+    }
+
     fun reset() {
         releaseSubScopes()
         mutableLocator = LayerLocator()
@@ -140,47 +188,6 @@ fun scope(name: String, parent: Scope? = Global, bindings: Scope.() -> Unit): Sc
 
 inline fun <reified T : Service> Scope.layer(bindings: Layer<T>.() -> Unit): Layer<T> {
     return locator.layer(bindings)
-}
-
-fun <T : Service, S : T> Scope.get(clazz: Key<S>): S? {
-    var value: S? = locator.get(clazz)
-    if (value == null) {
-        val scopes = subScopes()
-        if (scopes != null) {
-            for (scope in scopes) {
-                value = scope.get(clazz)
-                if (value != null) {
-                    break
-                }
-            }
-        }
-    }
-    return value
-}
-
-fun <T : Service, S : T> Scope.create(key: Key<S>, args: State? = null): S {
-    var value: S? = null
-    var exception: Exception? = null
-
-    try {
-        value = locator.create(key, args)
-    } catch (e: Exception) {
-        exception = e
-
-        val scopes = subScopes()
-        if (scopes != null) {
-            for (scope in scopes) {
-                try {
-                    value = scope.create(key, args)
-                    break
-                } catch (e: Exception) {
-                    //ignore
-                }
-            }
-        }
-    }
-
-    return value ?: throw exception!!
 }
 
 object Global : Scope()

@@ -21,7 +21,7 @@ import io.tagd.core.annotation.VisibleForTesting
 import java.lang.ref.WeakReference
 
 @Suppress("LeakingThis")
-abstract class UseCase<E, T> : Command<E, T> {
+abstract class Usecase<E, T> : Command<E, T> {
 
     private val defaultArgs = argsOf()
 

@@ -19,5 +19,6 @@ package io.tagd.arch.data.dto
 
 import io.tagd.arch.data.DataObject
 import io.tagd.core.Immutable
+import io.tagd.core.LayerSuperType
 
-class DataTransferObject : DataObject(), Immutable
+class DataTransferObject : DataObject(), LayerSuperType, Immutable

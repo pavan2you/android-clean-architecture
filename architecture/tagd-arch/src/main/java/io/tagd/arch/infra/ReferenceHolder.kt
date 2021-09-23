@@ -17,9 +17,10 @@
 
 package io.tagd.arch.infra
 
-import io.tagd.core.Service
-
-open class ReferenceHolder<T>(value: T) : Service {
+/**
+ * Holds any reference of type T, this comes handy to hold infra references like android's Context
+ */
+open class ReferenceHolder<T>(value: T) : InfraService {
 
     private var mutableValue: T? = value
 

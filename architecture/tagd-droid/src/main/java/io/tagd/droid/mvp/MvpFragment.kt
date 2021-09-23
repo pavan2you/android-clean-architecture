@@ -45,6 +45,7 @@ abstract class MvpFragment<V : PresentableView, P : Presenter<V>> : Fragment(), 
 
     protected abstract fun onCreateView(savedInstanceState: Bundle?)
 
+    @Suppress(names = ["UNCHECKED_CAST"])
     override fun <V : PresentableView> presenter(): Presenter<V>? = presenter as? Presenter<V>
 
     override fun onStart() {

@@ -23,38 +23,26 @@ import java.lang.ref.WeakReference
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-inline fun <reified T : Service> inject(
-    scope: String = GLOBAL_SCOPE,
-    key: Key<T> = Key(typeOf<T>())
-): InjectDelegateProvider<T> {
+open class ScopeAwareDelegateProvider {
 
-    val resolvedScope = resolveScope(scope)
-    return InjectDelegateProvider(resolvedScope, key)
-}
-
-inline fun <reified T : Service> injectX(
-    scope: String = GLOBAL_SCOPE,
-    key: Key<T> = Key(typeOf<T>())
-): NullableInjectDelegateProvider<T> {
-
-    val resolvedScope = resolveScope(scope)
-    return NullableInjectDelegateProvider(resolvedScope, key)
-}
-
-fun resolveScope(scope: String): Scope {
-    return if (scope != GLOBAL_SCOPE) {
-        Global.subScope(scope) ?: Global
-    } else Global
-}
-
-class InjectDelegateProvider<T : Service>(private val scope: Scope, private val key: Key<T>) {
-
-    operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): InjectDelegate<T> {
-        return InjectDelegate(scope, key)
+    protected fun resolveScope(scope: String): Scope {
+        return if (scope != GLOBAL_SCOPE) {
+            Global.subScope(scope) ?: Global
+        } else Global
     }
 }
 
-class InjectDelegate<T : Service>(private val scope: Scope, private val key: Key<T>) {
+open class InjectDelegateProvider<T : Service>(
+    private val scope: String,
+    private val key: Keyable<T>
+) : ScopeAwareDelegateProvider() {
+
+    open operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): InjectDelegate<T> {
+        return InjectDelegate(resolveScope(scope), key)
+    }
+}
+
+class InjectDelegate<T : Service>(private val scope: Scope, private val key: Keyable<T>) {
 
     private var valueReference: WeakReference<T?>? = null
 
@@ -74,17 +62,17 @@ class InjectDelegate<T : Service>(private val scope: Scope, private val key: Key
     }
 }
 
-class NullableInjectDelegateProvider<T : Service>(
-    private val scope: Scope,
-    private val key: Key<T>
-) {
+open class NullableInjectDelegateProvider<T : Service>(
+    private val scope: String,
+    private val key: Keyable<T>
+) : ScopeAwareDelegateProvider() {
 
-    operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): NullableInjectDelegate<T> {
-        return NullableInjectDelegate(scope, key)
+    open operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): NullableInjectDelegate<T> {
+        return NullableInjectDelegate(resolveScope(scope), key)
     }
 }
 
-class NullableInjectDelegate<T : Service>(private val scope: Scope, private val key: Key<T>) :
+class NullableInjectDelegate<T : Service>(private val scope: Scope, private val key: Keyable<T>) :
     ReadWriteProperty<Any, T?> {
 
     private var released: Boolean = false

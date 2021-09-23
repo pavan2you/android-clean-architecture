@@ -17,10 +17,10 @@
 
 package io.tagd.arch.domain.crosscutting.codec
 
-import io.tagd.arch.domain.crosscutting.CrossCutting
+import io.tagd.arch.domain.crosscutting.Crosscutting
 import java.lang.reflect.Type
 
-interface JsonCodec : CrossCutting {
+interface JsonCodec : Crosscutting {
 
     fun toJson(obj: Any): String
 

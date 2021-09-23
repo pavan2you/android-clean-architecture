@@ -18,8 +18,6 @@
 package io.tagd.app
 
 import android.os.Bundle
-import io.tagd.app.R.layout
-import io.tagd.arch.domain.crosscutting.async.present
 import io.tagd.arch.present.mvp.LifeCycleAwarePresenter
 import io.tagd.arch.present.mvp.PresentableView
 import io.tagd.droid.mvp.MvpActivity
@@ -47,11 +45,12 @@ class UsageActivity : MvpActivity<UsageView, UsagePresenter>(), UsageView {
 
     override fun onAwaiting() {
         super.onAwaiting()
+        setContentView(R.layout.usage_waiting_view)
     }
 
     override fun onReady() {
         super.onReady()
-        setContentView(layout.usage_view)
+        setContentView(R.layout.usage_view)
 
         val injector = AppInjector()
         injector.setup(this)

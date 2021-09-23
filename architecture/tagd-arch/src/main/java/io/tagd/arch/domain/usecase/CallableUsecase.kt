@@ -22,7 +22,7 @@ import io.tagd.core.annotation.VisibleForTesting
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicBoolean
 
-abstract class CallableUseCase<T> : UseCase<Unit, T>() {
+abstract class CallableUsecase<T> : Usecase<Unit, T>() {
 
     private var cancelled: AtomicBoolean = AtomicBoolean(false)
     private var cancelledContexts = CopyOnWriteArrayList<String>()

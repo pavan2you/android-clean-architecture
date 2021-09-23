@@ -23,10 +23,10 @@ import java.lang.ref.WeakReference
 import java.util.concurrent.ConcurrentHashMap
 
 @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-class ExecutionMonitor<E, T>(private val useCaseRef: WeakReference<UseCase<E, T>>) : Releasable {
+class ExecutionMonitor<E, T>(private val usecaseRef: WeakReference<Usecase<E, T>>) : Releasable {
 
     private val useCase
-        get() = useCaseRef.get()
+        get() = usecaseRef.get()
 
     private val monitors = ConcurrentHashMap<Args?, ExecutionResolution>()
 
@@ -75,7 +75,7 @@ class ExecutionMonitor<E, T>(private val useCaseRef: WeakReference<UseCase<E, T>
 
     override fun release() {
         monitors.clear()
-        useCaseRef.clear()
+        usecaseRef.clear()
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)

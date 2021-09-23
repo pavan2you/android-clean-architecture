@@ -17,6 +17,40 @@
 
 package io.tagd.arch.infra
 
+import io.tagd.core.LayerSuperType
 import io.tagd.core.Service
+import io.tagd.core.State
+import io.tagd.di.Global
+import io.tagd.di.Keyable
+import io.tagd.di.Scopable
+import io.tagd.di.key
 
-interface InfraService : Service
+/**
+ * 1. This works handy to wrap and access any infrastructure service(s) in problem domain code
+ */
+interface InfraService : LayerSuperType, Service {
+
+    /**
+     * The [InfraService.Factory] enables the DI frameworks and / or application logic to easily
+     * create / get any [InfraService]
+     */
+    companion object Factory {
+
+        inline fun <reified S : InfraService> infraService(
+            scope: Scopable = Global,
+            key: Keyable<S>? = null
+        ): S? {
+
+            return scope.get<InfraService, S>(key ?: key())
+        }
+
+        inline fun <reified S : InfraService> createInfraService(
+            scope: Scopable = Global,
+            key: Keyable<S>? = null,
+            state: State? = null
+        ): S {
+
+            return scope.create(key ?: key(), state)
+        }
+    }
+}

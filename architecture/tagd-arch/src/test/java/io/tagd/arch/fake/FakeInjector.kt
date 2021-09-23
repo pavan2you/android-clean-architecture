@@ -17,7 +17,7 @@
 
 package io.tagd.arch.fake
 
-import io.tagd.arch.domain.crosscutting.CrossCutting
+import io.tagd.arch.domain.crosscutting.Crosscutting
 import io.tagd.arch.domain.crosscutting.async.*
 import io.tagd.core.Releasable
 import io.tagd.di.Global
@@ -33,7 +33,7 @@ class FakeInjector : Releasable {
 
     private fun Global.injectCrossCuttings() {
         // global - cross cuttings
-        layer<CrossCutting> {
+        layer<Crosscutting> {
 
             //platform
             val testStrategy = FakeAsyncStrategy()

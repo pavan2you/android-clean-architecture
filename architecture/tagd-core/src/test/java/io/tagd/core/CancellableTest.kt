@@ -50,5 +50,4 @@ class CancellableTest {
         cancellable.cancel(context = "invalid")
         assert(!cancellable.cancelled)
     }
-
 }

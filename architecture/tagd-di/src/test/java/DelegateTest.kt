@@ -81,6 +81,7 @@ class DelegateTest {
 
         val ignored: FakeTypedService<String>? = getInjectX("unknown")
     }
+
     @Test
     fun `given an existing service then verify injectX-inline returns service`() {
         stubFakeService()

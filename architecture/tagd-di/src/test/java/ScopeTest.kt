@@ -21,6 +21,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.tagd.core.Service
 import io.tagd.core.State
 import fake.FakeService
+import io.tagd.core.stateOf
 import io.tagd.di.*
 import junit.framework.TestCase.assertNotNull
 import org.junit.Test
@@ -226,5 +227,35 @@ class ScopeTest {
         val service = scope.create(key<FakeService>(), null)
         assert(serviceAdded === service)
         verify(fakeServiceCreator).invoke(state)
+    }
+
+    @Test
+    fun `given an existing service-creator with args and key then verify scope returns service`() {
+        val serviceAdded = FakeService()
+        val fakeServiceCreator: (State?) -> FakeService = mock()
+        val state = stateOf("one" to "one")
+        whenever(fakeServiceCreator.invoke(state)).thenReturn(serviceAdded)
+
+        scope.layer<FakeService> {
+            bind(key(), fakeServiceCreator)
+        }
+
+        val service = scope.create(key<FakeService>(), state)
+        assert(serviceAdded === service)
+        verify(fakeServiceCreator).invoke(state)
+    }
+
+    @Test
+    fun `given two scopes then verify their names are same`() {
+        val scope1 = Scope("scope")
+        val scope2 = Scope("scope")
+        assert(scope1.name == scope2.name)
+    }
+
+    @Test
+    fun `given two scopes then verify their names are not same`() {
+        val scope1 = Scope("scope1")
+        val scope2 = Scope("scope2")
+        assert(scope1.name != scope2.name)
     }
 }

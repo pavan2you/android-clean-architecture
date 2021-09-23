@@ -17,9 +17,43 @@
 
 package io.tagd.arch.data.cache
 
+import io.tagd.core.LayerSuperType
 import io.tagd.core.Service
+import io.tagd.core.State
+import io.tagd.di.Global
+import io.tagd.di.Keyable
+import io.tagd.di.Scopable
+import io.tagd.di.key
 
-interface Cache<T> : Service
+/**
+ * Access cache of type T
+ */
+interface Cache<T> : LayerSuperType, Service {
+
+    /**
+     * The [Cache.Factory] enables the DI frameworks and / or application logic to easily
+     * create / get any [Cache]
+     */
+    companion object Factory {
+
+        inline fun <reified S : Cache<*>> cache(
+            scope: Scopable = Global,
+            key: Keyable<S>? = null
+        ): S? {
+
+            return scope.get<Cache<*>, S>(key ?: key())
+        }
+
+        inline fun <reified S : Cache<*>> createCache(
+            scope: Scopable = Global,
+            key: Keyable<S>? = null,
+            state: State? = null
+        ): S {
+
+            return scope.create(key ?: key(), state)
+        }
+    }
+}
 
 abstract class AbstractCache<T> : Cache<T> {
 

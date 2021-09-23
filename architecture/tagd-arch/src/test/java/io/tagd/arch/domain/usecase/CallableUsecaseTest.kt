@@ -27,9 +27,9 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class LiveUseCaseTest {
+class CallableUsecaseTest {
 
-    private val useCase: LiveUseCase<String> = spy()
+    private val useCase: CallableUsecase<String> = spy()
     private val executionMonitor = useCase.executionMonitor
 
     @After
@@ -89,7 +89,7 @@ class LiveUseCaseTest {
     }
 
     @Test
-    fun `given same args with different callbacks then verify all callbacks will receive same result`() {
+    fun `given same args with different callbacks then verify each result is different`() {
         val caller1 = FakeUseCaseCaller<String>()
         val args1 = caller1.args
         val success1 = caller1.success
@@ -118,13 +118,15 @@ class LiveUseCaseTest {
         assert(useCase.lastResult(args1) == result1)
 
         useCase.execute(args1, success2, failure2)
-        assert(caller1.result == result2)
+        assert(caller1.result == result1)
         assert(caller2.result == result2)
         assert(useCase.lastResult(args1) == result2)
+
+        assert(caller1.result != caller2.result)
     }
 
     @Test
-    fun `given no args with different callbacks then verify all callbacks will receive same result`() {
+    fun `given no args with different callbacks then verify each result is different`() {
         val caller1 = FakeUseCaseCaller<String>(null)
         val args1 = caller1.args
         val success1 = caller1.success
@@ -153,13 +155,15 @@ class LiveUseCaseTest {
         assert(useCase.lastResult(args1) == result1)
 
         useCase.execute(args1, success2, failure2)
-        assert(caller1.result == result2)
+        assert(caller1.result == result1)
         assert(caller2.result == result2)
         assert(useCase.lastResult(args1) == result2)
+
+        assert(caller1.result != caller2.result)
     }
 
     @Test
-    fun `given multiple calls with same args and callbacks when execution success then verify allButFirstResult is from cache`() {
+    fun `given multiple calls with same args and callbacks when execution success then verify allButFirstReceivedResult is from cache`() {
         val caller = FakeUseCaseCaller<String>()
         val args = caller.args
         val success = caller.success
@@ -354,35 +358,9 @@ class LiveUseCaseTest {
         assert(args.get<Boolean>("called") == true)
     }
 
-    @Test
-    fun `given invalidate is called verify it is handled`() {
-        val args = argsOf()
-        val caller1 = FakeUseCaseCaller<String>(args)
-        val success1 = caller1.success
-        val failure1 = caller1.failure
-
-        val caller2 = FakeUseCaseCaller<String>(args)
-        val success2 = caller2.success
-        val failure2 = caller2.failure
-
-        val result = "result"
-
-        useCase.resolveArgsAndObserver(args, null, success1, failure1)
-        useCase.resolveArgsAndObserver(args, null, success2, failure2)
-
-        `when`(useCase.trigger(args)).thenAnswer {
-            if (executionMonitor.isLastExecutionFromInvalidation(args)) {
-                useCase.setValue(args, result)
-            }
-        }
-
-        useCase.invalidate()
-
-        assert(caller1.result == result)
-        assert(useCase.lastResult(args) == result)
-
-        assert(caller2.result == result)
-        assert(useCase.lastResult(args) == result)
+    @Test(expected = IllegalAccessException::class)
+    fun `given invalidate called then throw IllegalAccessException`() {
+        useCase.invalidate(argsOf())
     }
 
     @Test

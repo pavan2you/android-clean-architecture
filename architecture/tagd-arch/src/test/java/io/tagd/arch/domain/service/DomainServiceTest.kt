@@ -15,53 +15,57 @@
  *
  */
 
-package io.tagd.arch.data.dao
+package io.tagd.arch.domain.service
 
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.spy
+import io.tagd.arch.fake.FakeInjector
 import io.tagd.di.Global
 import io.tagd.di.layer
-import org.junit.Assert
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class DataAccessObjectTest {
+class DomainServiceTest {
 
-    private val dao: DataAccessObject = spy()
+    @Before
+    fun setup() {
+        FakeInjector.inject()
+    }
 
-    @Test
-    fun `given a Dao then verify it is not null`() {
-        Assert.assertNotNull(dao)
+    @After
+    fun tearDown() {
+        FakeInjector.release()
     }
 
     @Test
-    fun `verify dao access for bounded service`() {
+    fun `verify domainService access for bounded service`() {
         with(Global) {
-            layer<DataAccessObject> {
-                bind<DataAccessObject>().toInstance(mock())
+            layer<DomainService> {
+                bind<DomainService>().toInstance(mock())
             }
         }
 
-        val service = DataAccessObject.dao<DataAccessObject>()
+        val service = DomainService.domainService<DomainService>()
         assert(service != null)
     }
 
     @Test
-    fun `verify createDataAccessObject access for bounded service`() {
-        val service1 = FakeDataAccessObject()
+    fun `verify createDomainService access for bounded service`() {
+        val service1 = FakeDomainService()
         with(Global) {
-            layer<DataAccessObject> {
-                bind<FakeDataAccessObject>().toCreator { service1 }
+            layer<DomainService> {
+                bind<FakeDomainService>().toCreator { service1 }
             }
         }
 
-        val service2 = DataAccessObject.createDao<FakeDataAccessObject>()
+        val service2 = DomainService.createDomainService<FakeDomainService>()
         assert(service1 === service2)
     }
 
-    class FakeDataAccessObject : DataAccessObject {
+    class FakeDomainService : DomainService {
         override fun release() {
         }
     }

@@ -18,11 +18,17 @@
 package io.tagd.arch.domain.usecase
 
 import io.tagd.core.Cancellable
+import io.tagd.core.LayerSuperType
 import io.tagd.core.Service
+import io.tagd.core.State
+import io.tagd.di.Global
+import io.tagd.di.Keyable
+import io.tagd.di.Scopable
+import io.tagd.di.key
 
 typealias Callback<T> = (T) -> Unit
 
-interface Command<EXECUTE, T> : Cancellable, Service {
+interface Command<EXECUTE, T> : LayerSuperType, Service, Cancellable {
 
     fun execute(
         args: Args? = null,
@@ -31,4 +37,28 @@ interface Command<EXECUTE, T> : Cancellable, Service {
     ): EXECUTE
 
     fun lastResult(args: Args? = null): T?
+
+    /**
+     * The [Command.Factory] enables the DI frameworks and / or application logic to easily
+     * create / get any [Command]
+     */
+    companion object Factory {
+
+        inline fun <reified S : Command<*, *>> usecase(
+            scope: Scopable = Global,
+            key: Keyable<S>? = null
+        ): S? {
+
+            return scope.get<Command<*, *>, S>(key ?: key())
+        }
+
+        inline fun <reified S : Command<*, *>> createUsecase(
+            scope: Scopable = Global,
+            key: Keyable<S>? = null,
+            state: State? = null
+        ): S {
+
+            return scope.create(key ?: key(), state)
+        }
+    }
 }

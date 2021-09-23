@@ -17,7 +17,10 @@
 
 package io.tagd.arch.data.repo
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.spy
+import io.tagd.di.Global
+import io.tagd.di.layer
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,5 +34,35 @@ class RepositoryTest {
     @Test
     fun `given a Repository then verify it is not null`() {
         Assert.assertNotNull(repository)
+    }
+
+    @Test
+    fun `verify repository access for bounded service`() {
+        with(Global) {
+            layer<Repository> {
+                bind<Repository>().toInstance(mock())
+            }
+        }
+
+        val service = Repository.repository<Repository>()
+        assert(service != null)
+    }
+
+    @Test
+    fun `verify createRepository access for bounded service`() {
+        val service1 = FakeRepository()
+        with(Global) {
+            layer<Repository> {
+                bind<FakeRepository>().toCreator { service1 }
+            }
+        }
+
+        val service2 = Repository.createRepository<FakeRepository>()
+        assert(service1 === service2)
+    }
+
+    class FakeRepository : Repository {
+        override fun release() {
+        }
     }
 }

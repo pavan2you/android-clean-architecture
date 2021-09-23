@@ -15,7 +15,7 @@
  *
  */
 
-package io.tagd.arch.present.service
+package io.tagd.arch.domain.crosscutting
 
 import io.tagd.core.LayerSuperType
 import io.tagd.core.Service
@@ -25,29 +25,23 @@ import io.tagd.di.Keyable
 import io.tagd.di.Scopable
 import io.tagd.di.key
 
-/**
- * A reusable presentation logic, which is common for more than one
- * [io.tagd.arch.present.mvp.Presenter] or [io.tagd.arch.present.mvb.Binder] goes here. The
- * [PresentationService]s come handy when the [io.tagd.arch.domain.usecase.Command]s are not the
- * ideal way to place the the presentation logic.
- */
-interface PresentationService : LayerSuperType, Service {
+interface Crosscutting : LayerSuperType, Service {
 
     /**
-     * The [PresentationService.Factory] enables the DI frameworks and / or application logic to
-     * easily create / get any [PresentationService]
+     * The [Crosscutting.Factory] enables the DI frameworks and / or application logic to easily
+     * create / get any [Crosscutting]
      */
     companion object Factory {
 
-        inline fun <reified S : PresentationService> presentationService(
+        inline fun <reified S : Crosscutting> crosscutting(
             scope: Scopable = Global,
             key: Keyable<S>? = null
         ): S? {
 
-            return scope.get<PresentationService, S>(key ?: key())
+            return scope.get<Crosscutting, S>(key ?: key())
         }
 
-        inline fun <reified S : PresentationService> createPresentationService(
+        inline fun <reified S : Crosscutting> createCrosscutting(
             scope: Scopable = Global,
             key: Keyable<S>? = null,
             state: State? = null

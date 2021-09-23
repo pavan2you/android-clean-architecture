@@ -15,23 +15,6 @@
  *
  */
 
-plugins {
-    id 'java-library'
-    id 'kotlin'
-}
-apply from : 'sign-publish.gradle'
+package io.tagd.core
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
-}
-
-dependencies {
-    api project(':architecture:tagd-core')
-    api project(':architecture:tagd-di')
-
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:3.8.0'
-    testImplementation 'org.mockito:mockito-inline:2.28.2'
-    testImplementation 'com.nhaarman:mockito-kotlin:1.6.0'
-}
+interface LayerSuperType
