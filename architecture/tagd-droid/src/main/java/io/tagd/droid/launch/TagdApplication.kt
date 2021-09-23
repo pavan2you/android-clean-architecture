@@ -25,9 +25,9 @@ import io.tagd.arch.control.ApplicationController
 import io.tagd.arch.control.IApplication
 import io.tagd.arch.control.LifeCycleAwareApplicationController
 import io.tagd.arch.domain.crosscutting.async.cancelAsync
+import io.tagd.arch.domain.crosscutting.async.present
 import io.tagd.di.Global
 import io.tagd.di.Key
-import io.tagd.di.get
 import io.tagd.droid.lifecycle.ReadyLifeCycleEventDispatcher
 
 open class TagdApplication : Application(), IApplication {
@@ -103,7 +103,9 @@ open class TagdApplication : Application(), IApplication {
      * [dispatchOnLoadingComplete] will be called as the last step
      */
     protected fun dispatchOnLoadingComplete() {
-        onReady()
+        present(this) {
+            onReady()
+        }
     }
 
     @MainThread

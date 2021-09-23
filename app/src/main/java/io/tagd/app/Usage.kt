@@ -31,7 +31,7 @@ class Usage : Releasable {
     private val simpleRepo2 by inject<SimpleRepo2>(scope = "application")
     private val simpleDao by inject<SimpleDao>(scope = "random")
 
-    private val infraService by inject<InfraService<Context>>()
+    private val infraService by inject<InfraTypedService<Context>>()
 
     private val typedContextService by inject(
         key = key2<SimpleTypedService<Context>, Context>()

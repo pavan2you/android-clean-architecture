@@ -18,19 +18,39 @@
 package io.tagd.app
 
 import android.os.Bundle
+import android.widget.Toast
+import io.tagd.arch.domain.crosscutting.async.cancelAsync
+import io.tagd.arch.domain.crosscutting.async.compute
+import io.tagd.arch.domain.crosscutting.async.present
 import io.tagd.arch.present.mvp.LifeCycleAwarePresenter
 import io.tagd.arch.present.mvp.PresentableView
 import io.tagd.droid.mvp.MvpActivity
 
 interface UsageView : PresentableView {
 
+    fun showMessage(message: String)
+
     fun showCallerView()
 }
 
 class UsagePresenter(view : UsageView) : LifeCycleAwarePresenter<UsageView>(view) {
 
+    override fun onReady() {
+        super.onReady()
+
+        val timeTakingWorkDuration = 5000L
+        compute(this, timeTakingWorkDuration) {
+            view?.showMessage("I've finished a long running computation work")
+        }
+    }
+
     override fun onBackPressed() {
         view?.showCallerView()
+    }
+
+    override fun onDestroy() {
+        cancelAsync(this)
+        super.onDestroy()
     }
 }
 
@@ -52,11 +72,15 @@ class UsageActivity : MvpActivity<UsageView, UsagePresenter>(), UsageView {
         super.onReady()
         setContentView(R.layout.usage_view)
 
-        val injector = AppInjector()
-        injector.setup(this)
         val usage = Usage()
         usage.use()
         usage.release()
+    }
+
+    override fun showMessage(message: String) {
+        present(this) {
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun showCallerView() {
@@ -64,5 +88,6 @@ class UsageActivity : MvpActivity<UsageView, UsagePresenter>(), UsageView {
     }
 
     override fun release() {
+        cancelAsync(this)
     }
 }

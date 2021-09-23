@@ -18,22 +18,41 @@
 package io.tagd.app
 
 import android.content.Context
+import io.tagd.androidx.coroutines.Dispatchers
 import io.tagd.arch.data.dao.DataAccessObject
 import io.tagd.arch.data.gateway.Gateway
 import io.tagd.arch.data.repo.Repository
+import io.tagd.arch.domain.crosscutting.Crosscutting
+import io.tagd.arch.domain.crosscutting.async.*
+import io.tagd.arch.infra.InfraService
+import io.tagd.arch.infra.ReferenceHolder
 import io.tagd.di.*
+import io.tagd.droid.crosscutting.*
+import io.tagd.droid.launch.Injector
 
-class AppInjector {
+class AppInjector(application: SampleApplication) : Injector(application) {
 
-    fun setup(context: Context) {
+    override fun inject() {
+        super.inject()
+
         scope("application") {
 
             //Infra layer
-            layer<Infra> {
-                bind(key(), InfraService(context))
+            layer<InfraService> {
+                bind(key(), InfraTypedService(app))
+
+                bind(
+                    key2<ReferenceHolder<Context>, Context>(),
+                    ReferenceHolder(app!!)
+                )
+
+                bind(
+                    key2<ReferenceHolder<Dispatchers>, Dispatchers>(),
+                    ReferenceHolder(provideDispatchers())
+                )
             }
 
-            //Infra mix layer
+            //typed services layer
             layer<TypedService<*>> {
                 bind(key2<SimpleTypedService<Context>, Context>(),
                     SimpleTypedService()
@@ -71,6 +90,27 @@ class AppInjector {
                     SimpleGateway()
                 )
             }
+
+            // global - cross cuttings
+            layer<Crosscutting> {
+                bind<ComputationStrategy>().toInstance(CoroutineComputationStrategy())
+                bind<PresentationStrategy>().toInstance(CoroutinePresentationStrategy())
+                bind<NetworkIOStrategy>().toInstance(CoroutineNetworkStrategy())
+                bind<DiskIOStrategy>().toInstance(CoroutineDiskStrategy())
+                bind<DaoStrategy>().toInstance(CoroutineDaoStrategy())
+            }
         }
+    }
+
+    private fun provideDispatchers(): Dispatchers {
+        Dispatchers.set(
+            Dispatchers.Builder()
+                .Main(kotlinx.coroutines.Dispatchers.Main.immediate)
+                .Default(kotlinx.coroutines.Dispatchers.Default)
+                .IO(kotlinx.coroutines.Dispatchers.IO)
+                .Unconfined(kotlinx.coroutines.Dispatchers.Unconfined)
+                .build()
+        )
+        return Dispatchers.get()
     }
 }

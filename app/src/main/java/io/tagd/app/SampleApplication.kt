@@ -17,15 +17,33 @@
 
 package io.tagd.app
 
-import android.os.Handler
-import android.os.Looper
+import io.tagd.arch.domain.crosscutting.async.cancelAsync
+import io.tagd.arch.domain.crosscutting.async.compute
+import io.tagd.droid.launch.Injector
 import io.tagd.droid.launch.TagdApplication
 
 class SampleApplication : TagdApplication() {
 
+    override fun setupInjector() {
+        Injector.setInjector(AppInjector(this))
+    }
+
     override fun onLoading() {
-        Handler(Looper.getMainLooper()).postDelayed({
+        // instead of handler | coroutine job context/scope
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            dispatchOnLoadingComplete()
+//        }, 5000)
+
+        // an abstracted way of scheduling work - it doesn't matter which scheduling approach in
+        // beneath
+        compute(this, 5000) {
             dispatchOnLoadingComplete()
-        }, 5000)
+        }
+    }
+
+    override fun release() {
+        // gracefully cancel pending tasks
+        cancelAsync(this)
+        super.release()
     }
 }

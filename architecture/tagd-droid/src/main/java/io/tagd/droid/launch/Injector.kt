@@ -33,6 +33,7 @@ open class Injector(application: TagdApplication) : AppService {
     open fun inject() {
         val application = app!!
         with(Global) {
+            reset()
             injectAppServicesLayer(application)
         }
     }

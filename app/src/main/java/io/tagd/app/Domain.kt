@@ -20,10 +20,10 @@ package io.tagd.app
 import io.tagd.arch.data.dao.DataAccessObject
 import io.tagd.arch.data.gateway.Gateway
 import io.tagd.arch.data.repo.Repository
+import io.tagd.arch.infra.InfraService
 import io.tagd.core.Service
 import java.lang.ref.WeakReference
 
-interface Infra : Service
 interface TypedService<T> : Service
 
 class SimpleGateway : Gateway {
@@ -46,7 +46,7 @@ class SimpleRepo2 : Repository {
     }
 }
 
-class InfraService<T>(infra: T) : Infra {
+class InfraTypedService<T>(infra: T) : InfraService {
 
     private var infraReference = WeakReference(infra)
 
@@ -55,7 +55,7 @@ class InfraService<T>(infra: T) : Infra {
     }
 
     override fun toString(): String {
-        return "InfraService(infraObject=${infraReference.get()})"
+        return "InfraTypedService(infraObject=${infraReference.get()})"
     }
 }
 

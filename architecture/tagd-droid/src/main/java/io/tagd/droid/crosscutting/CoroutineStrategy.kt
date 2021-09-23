@@ -23,6 +23,7 @@ import io.tagd.arch.domain.crosscutting.async.*
 import io.tagd.javax.lang.ref.ComparableWeakReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
@@ -38,12 +39,15 @@ open class CoroutineStrategy(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val monitor = ConcurrentHashMap<ComparableWeakReference<out Any>, CopyOnWriteArrayList<Job>>()
 
-    override fun execute(context: Any?, work: () -> Unit) {
-        executeCoroutine(context, work)
+    override fun execute(context: Any?, delay: Long, work: () -> Unit) {
+        executeCoroutine(context, delay, work)
     }
 
-    protected open fun executeCoroutine(context: Any?, work: () -> Unit) {
+    protected open fun executeCoroutine(context: Any?, delayBy: Long, work: () -> Unit) {
         val job = scope.launch {
+            if (delayBy > 0) {
+                delay(delayBy)
+            }
             work.invoke()
         }
         monitorJob(context, job)
