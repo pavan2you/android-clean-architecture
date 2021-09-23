@@ -15,20 +15,34 @@
  *
  */
 
-package io.tagd.arch.data.dto
+package io.tagd.core
 
-import org.junit.Assert
+import com.nhaarman.mockito_kotlin.mock
+import io.tagd.core.fake.FakeNameable
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class DataTransferObjectTest {
+class NameableTest {
+
+    private val nameable: Nameable = FakeNameable()
 
     @Test
-    fun `given a DataTransferObject is created then verify it is not null`() {
-        val dataTransferObject = DataTransferObject()
-        Assert.assertNotNull(dataTransferObject)
-        Assert.assertNotNull(dataTransferObject.crudOperation)
+    fun `given a nameable verify it has a no name`() {
+        val noNameable = mock<Nameable>()
+        assert(noNameable.name == null)
+    }
+
+    @Test
+    fun `given a nameable verify it has a name`() {
+        nameable as FakeNameable
+        assert(nameable.name != null)
+    }
+
+    @Test
+    fun `given a nameable verify it has a name matching to given name`() {
+        nameable as FakeNameable
+        assert(nameable.name === "fake")
     }
 }
