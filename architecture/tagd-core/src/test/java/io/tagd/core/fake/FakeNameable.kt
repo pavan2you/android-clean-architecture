@@ -15,15 +15,13 @@
  *
  */
 
-package io.tagd.arch.fake
+package io.tagd.core.fake
 
-import io.tagd.arch.data.DataObject
-import io.tagd.arch.present.mvb.BindableView
-import io.tagd.arch.present.mvb.DataBinder
+import io.tagd.core.Nameable
 
-class FakeDataBinder<V : BindableView<DataObject>>(view: V) :
-    DataBinder<DataObject, BindableView<DataObject>>(view) {
+class FakeNameable : Nameable {
 
-    override fun onBind(model: DataObject, vararg optionals: Any?) {
-    }
+    override val name: String
+        get() = "fake"
+
 }
