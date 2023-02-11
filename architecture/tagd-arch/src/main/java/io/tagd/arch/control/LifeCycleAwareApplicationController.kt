@@ -56,6 +56,6 @@ class LifeCycleAwareApplicationController(application: IApplication) :
     }
 
     override fun release() {
-        //no op
+        applicationReference = null
     }
 }

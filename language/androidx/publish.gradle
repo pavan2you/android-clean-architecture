@@ -25,10 +25,11 @@ ext {
     projectUrl = "${gitRepoUrl}/language/${projectName}"
 }
 
-task sourceJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier "sources"
+tasks.register("sourceJar", Jar.class) {
+    from(android.sourceSets.main.java.srcDirs)
+    archiveClassifier.set("sources")
 }
+
 
 publishing {
 
