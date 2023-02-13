@@ -30,15 +30,21 @@ if (secretPropsFile.exists()) {
     ext["signing.secretKeyRingFile"] = System.getenv('SIGNING_SECRET_KEY_RING_FILE')
     ext["ossrhUsername"] = System.getenv('OSSRH_USERNAME')
     ext["ossrhPassword"] = System.getenv('OSSRH_PASSWORD')
+    ext["githubUser"] = System.getenv('USER_GITHUB')
+    ext["githubToken"] = System.getenv('TOKEN_GITHUB')
 }
 
 ext {
     artifactGroupId = "io.github.pavan2you"
     artifactVersionCode = 0
-    artifactVersionName = "0.0.0-alpha1-SNAPSHOT"
+    artifactVersionName = "0.0.0-alpha3-snapshot"
 
+    gitProjectPath = "pavan2you/android-clean-architecture"
     gitProject = "pavan2you/android-clean-architecture.git"
-    gitRepoUrl = "https://github.com/pavan2you/android-clean-architecture/tree/master"
+    gitRepoUrl = "https://github.com/pavan2you/android-clean-architecture"
+    gitBranchUrl = "https://github.com/pavan2you/android-clean-architecture/tree/master"
 
-    canPublishRemote = false//ext["signing.keyId"] != null
+    enableRemotePublish = true
+    enableGithubPublish = true
+    enableNexusPublish = false
 }
