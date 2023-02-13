@@ -25,9 +25,9 @@ ext {
     projectUrl = "${gitRepoUrl}/language/${projectName}"
 }
 
-task sourceJar(type: Jar) {
-    from sourceSets.main.java.srcDirs
-    classifier "sources"
+tasks.register("sourceJar", Jar.class) {
+    from(sourceSets.main.java.srcDirs)
+    archiveClassifier.set("sources")
 }
 
 publishing {
@@ -53,7 +53,7 @@ publishing {
 
                 from components.java
 
-                //artifact(sourceJar)
+                artifact(sourceJar)
                 artifact("$buildDir/libs/${projectName}.jar")
 
                 pom {

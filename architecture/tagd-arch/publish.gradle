@@ -25,9 +25,9 @@ ext {
     projectUrl = "${gitRepoUrl}/architecture/${projectName}"
 }
 
-task sourceJar(type: Jar) {
-    from sourceSets.main.java.srcDirs
-    classifier "sources"
+tasks.register("sourceJar", Jar.class) {
+    from(sourceSets.main.java.srcDirs)
+    archiveClassifier.set("sources")
 }
 
 publishing {
