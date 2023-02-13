@@ -35,7 +35,7 @@ if (secretPropsFile.exists()) {
 ext {
     artifactGroupId = "io.github.pavan2you"
     artifactVersionCode = 0
-    artifactVersionName = "0.0.0-alpha1"
+    artifactVersionName = "0.0.0-alpha1-SNAPSHOT"
 
     gitProject = "pavan2you/android-clean-architecture.git"
     gitRepoUrl = "https://github.com/pavan2you/android-clean-architecture/tree/master"
