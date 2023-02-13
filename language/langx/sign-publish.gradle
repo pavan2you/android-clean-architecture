@@ -15,9 +15,12 @@
  *
  */
 
-apply plugin: 'signing'
 apply from: 'publish.gradle'
 
-signing {
-    sign publishing.publications
+if (enableNexusPublish) {
+    apply plugin: 'signing'
+
+    signing {
+        sign publishing.publications
+    }
 }
